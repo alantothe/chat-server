@@ -1,13 +1,3 @@
-// const NotificationSchema = new mongoose.Schema({
-//   userId: String, // ID of the user receiving the notification
-//   type: String, // 'message' or 'friend_request'
-//   content: String, // Brief description or message for the notification
-//   conversationId: { type: String, default: null }, // Optional, for message notifications
-//   friendRequestId: { type: String, default: null }, // Optional, for friend request notifications
-//   timestamp: { type: Date, default: Date.now },
-//   read: { type: Boolean, default: false }
-// });
-
 import mongoose from "mongoose";
 
 const NotificationSchema = new mongoose.Schema({
