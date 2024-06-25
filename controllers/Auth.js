@@ -58,3 +58,32 @@ export const register = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  let user;
+  try {
+    user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+    if (await bcrypt.compare(password, user.password)) {
+      const payload = {
+        _id: user._id,
+        avatar: user.avatar,
+
+        exp: parseInt(exp.getTime() / 1000),
+      };
+
+      const token = jwt.sign(payload, TOKEN_KEY);
+      res.status(201).json({ token });
+    } else {
+      res.status(401).json({
+        error: "Invalid Credentials",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
