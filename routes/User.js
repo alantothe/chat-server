@@ -1,13 +1,11 @@
 import { Router } from "express";
+import * as auth from "../controllers/Auth.js";
+import * as controllers from "../controllers/User.js";
 
 const router = Router();
 
-// Placeholder controller functions
-const getUsers = (req, res) => {
-  res.send("Get all users");
-};
-
-// Define your routes and use placeholder functions
-router.get("/", getUsers);
+router.post("/register", auth.register);
+router.get("/limited/:_id", controllers.limitedUser);
+router.get("/entire/:_id", controllers.entireUser);
 
 export default router;

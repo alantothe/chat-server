@@ -36,15 +36,18 @@ const UserSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    default: "offline",
   },
   bio: {
     type: String,
     trim: true,
     maxlength: 300,
+    default: "",
   },
   backgroundImage: {
     type: String,
     trim: true,
+    default: "",
   },
   friends: [
     {
@@ -66,7 +69,7 @@ const UserSchema = new mongoose.Schema({
   ],
   openConversation: {
     type: mongoose.Schema.Types.ObjectId,
-    default: "",
+    default: null,
     ref: "Conversation",
   },
 });
