@@ -4,6 +4,7 @@ import { Router } from "express";
 // import FriendRequest from "./FriendRequest";
 // import Conversation from "./Conversation";
 import usersRouter from "./User.js";
+import emailsRouter from "./Emails.js";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.get("/", (req, res) => {
 });
 
 router.use("/user", usersRouter);
+router.use("/email", emailsRouter);
 
 export default router;

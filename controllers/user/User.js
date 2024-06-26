@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../../models/User.js";
 
 export const entireUser = async (req, res) => {
   const { _id } = req.params;
