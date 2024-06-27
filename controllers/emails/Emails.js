@@ -34,9 +34,7 @@ export const sendEmail = async (req, res) => {
   const { data, error } = await resend.emails.send({
     from: "Acme <admin@alanwebdev.com>",
     to: [email],
-    subject: `Password Reset for ${user.firstName && user.lastName}  ${
-      user.email
-    }`,
+    subject: `Password Reset for ${user.firstName} ${user.lastName}  ${user.email}`,
     html: `<strong>Click <a href="${resetLink}">here</a> to reset your password.</strong>`,
   });
 
@@ -44,5 +42,7 @@ export const sendEmail = async (req, res) => {
     return res.status(400).json({ error });
   }
 
-  res.status(200).json({ message: "Reset link sent to your email address" });
+  res
+    .status(200)
+    .json({ message: "Reset link sent to your email address", token: token });
 };

@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/register", auth.register);
 router.post("/login", auth.login);
+router.patch("/reset", auth.resetPassword);
 router.get("/limited/:_id", controllers.limitedUser);
 router.get("/entire/:_id", controllers.entireUser);
 
