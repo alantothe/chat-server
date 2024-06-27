@@ -32,6 +32,7 @@ export const acceptFriendRequest = async (req, res) => {
     // Grab IDs from request
     const { requisitionerId, recipientId } = request;
 
+    // Push the friend to each user's friends array
     await User.findByIdAndUpdate(requisitionerId, {
       $push: { friends: recipientId },
     }).exec();
@@ -45,6 +46,24 @@ export const acceptFriendRequest = async (req, res) => {
       requisitionerId,
       recipientId,
     });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const rejectFriendRequest = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const request = await FriendRequest.findByIdAndUpdate(
+      _id,
+      { status: "rejected" },
+      { new: true }
+    ).exec();
+    if (!request) {
+      return res.status(404).json({ message: "Friend request not found" });
+    }
+    res.json({ message: "Friend request rejected", request });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
