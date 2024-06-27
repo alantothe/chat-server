@@ -1,10 +1,7 @@
 import { Router } from "express";
-
-const getAll = (req, res) => {
-  res.send("Get all");
-};
+import * as controllers from "../controllers/friendrequest/FriendRequest.js";
 
 const router = Router();
-router.get("/", getAll);
+router.post("/request", controllers.sendFriendRequest);
 
 export default router;

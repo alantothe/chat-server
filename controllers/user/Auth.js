@@ -1,12 +1,13 @@
 import User from "../../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 let TOKEN_KEY = process.env.TOKEN_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // for JWT expiration
 const today = new Date();
@@ -52,6 +53,18 @@ export const register = async (req, res) => {
     };
 
     const token = jwt.sign(payload, TOKEN_KEY);
+
+    const { data, error } = await resend.emails.send({
+      from: "Acme <admin@alanwebdev.com>",
+      to: [email],
+      subject: `Welcome to Chattothe!  ${user.firstName} ${user.lastName}`,
+      html: `<strong>Thanks for signing up to the greatest chat app of all time</strong>`,
+    });
+
+    if (error) {
+      return res.status(400).json({ error });
+    }
+
     res.status(201).json({ token });
   } catch (err) {
     console.log(err);
