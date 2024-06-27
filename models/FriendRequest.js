@@ -21,6 +21,12 @@ const FriendRequestSchema = mongoose.Schema(
   }
 );
 
+// Ensure a unique combination of requisitionerId and recipientId
+FriendRequestSchema.index(
+  { requisitionerId: 1, recipientId: 1 },
+  { unique: true }
+);
+
 const FriendRequest = mongoose.model("FriendRequest", FriendRequestSchema);
 
 export default FriendRequest;

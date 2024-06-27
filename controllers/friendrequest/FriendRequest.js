@@ -4,6 +4,24 @@ import User from "../../models/User.js";
 export const sendFriendRequest = async (req, res) => {
   const { requisitionerId, recipientId } = req.body;
   try {
+    // Check if a friend request already exists
+    const existingRequest = await FriendRequest.findOne({
+      requisitionerId,
+      recipientId,
+      status: "pending",
+    }).exec();
+
+    // Check if they are already friends
+    const areFriends = await User.findOne({
+      _id: requisitionerId,
+      friends: recipientId,
+    }).exec();
+
+    if (existingRequest || areFriends) {
+      return res.status(400).json({
+        message: "Friend request already exists or you are already friends.",
+      });
+    }
     const request = await FriendRequest.create({
       requisitionerId,
       recipientId,
