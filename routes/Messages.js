@@ -1,10 +1,7 @@
 import { Router } from "express";
-
-const getAll = (req, res) => {
-  res.send("Get all");
-};
+import * as controllers from "../controllers/messages/Messages.js";
 
 const router = Router();
-router.get("/api/messages/search", getAll);
+router.post("/send", controllers.createMessage);
 
 export default router;

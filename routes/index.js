@@ -1,5 +1,5 @@
 import { Router } from "express";
-// import Messages from "./Messages";
+import messageRouter from "./Messages.js";
 // import Notification from "./Notification";
 import friendRequestRouter from "./FriendRequest.js";
 // import Conversation from "./Conversation";
@@ -15,5 +15,6 @@ router.get("/", (req, res) => {
 router.use("/user", usersRouter);
 router.use("/email", emailsRouter);
 router.use("/friendrequest", friendRequestRouter);
+router.use("/message", messageRouter);
 
 export default router;
