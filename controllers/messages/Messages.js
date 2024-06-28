@@ -28,6 +28,33 @@ export const createMessage = async (req, res) => {
       });
 
       await conversation.save();
+
+      // create the new message and link it to the conversation
+      const newMessage = new Messages({
+        conversationId: conversation._id,
+        senderId,
+        message,
+        img,
+      });
+
+      await newMessage.save();
+
+      // push conversation id to user's activeConversations or activeGroupConversations
+      members.length <= 2
+        ? await conversation.members.forEach(async (member) => {
+            await User.findByIdAndUpdate(
+              member._id,
+              { $push: { activeConversations: conversation._id } },
+              { new: true }
+            ).exec();
+          })
+        : await conversation.members.forEach(async (member) => {
+            await User.findByIdAndUpdate(
+              member._id,
+              { $push: { activeGroupConversations: conversation._id } },
+              { new: true }
+            ).exec();
+          });
     } else {
       // update the last message for the existing conversation
       conversation.set({
@@ -36,29 +63,20 @@ export const createMessage = async (req, res) => {
         lastMessageFrom: senderId,
       });
       await conversation.save();
+      // create the new message and link it to the conversation
+      const newMessage = new Messages({
+        conversationId: conversation._id,
+        senderId,
+        message,
+        img,
+      });
+
+      await newMessage.save();
     }
-    // create the new message and link it to the conversation
-    const newMessage = new Messages({
-      conversationId: conversation._id,
-      senderId,
-      message,
-      img,
-    });
-
-    const messageSaved = await newMessage.save();
-
-    // push conversation id to user's activeConversations
-    await conversation.members.forEach(async (member) => {
-      await User.findByIdAndUpdate(
-        member._id,
-        { $push: { activeConversations: conversation._id } },
-        { new: true }
-      ).exec();
-    });
 
     res.status(201).json({
       message: "Message was sent successfully!",
-      messageData: messageSaved,
+
       members: conversation.detailedMembers,
     });
   } catch (err) {

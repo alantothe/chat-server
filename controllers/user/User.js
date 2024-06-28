@@ -1,4 +1,6 @@
 import User from "../../models/User.js";
+import Conversation from "../../models/Conversation.js";
+import { json } from "express";
 
 export const entireUser = async (req, res) => {
   const { _id } = req.params;
@@ -52,6 +54,38 @@ export const updateUser = async (req, res) => {
     res.json({ message: "User updated successfully", user });
   } catch (err) {
     console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const openConversation = async (req, res) => {
+  const { conversationId, _id } = req.body;
+
+  try {
+    // Update the unreadCount map for the given user _id
+    const conversation = await Conversation.findByIdAndUpdate(
+      conversationId,
+      { $set: { [`unreadCount.${_id}`]: 0 } },
+      { new: true }
+    ).exec();
+
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { $set: { openConversation: _id } },
+      { new: true }
+    ).exec();
+
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    res.json({
+      message: "Conversation opened successfully",
+      conversation,
+      user,
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
