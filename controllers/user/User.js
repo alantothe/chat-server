@@ -68,7 +68,7 @@ export const openConversation = async (req, res) => {
       { $set: { [`unreadCount.${_id}`]: 0 } },
       { new: true }
     ).exec();
-
+    // Update the user's openConversation field
     const user = await User.findByIdAndUpdate(
       _id,
       { $set: { openConversation: _id } },
@@ -81,8 +81,28 @@ export const openConversation = async (req, res) => {
 
     res.json({
       message: "Conversation opened successfully",
-      conversation,
-      user,
+      data: user.openConversation,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const closeConversation = async (req, res) => {
+  const { _id } = req.body;
+
+  try {
+    // Update the user's openConversation field
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { $set: { openConversation: null } },
+      { new: true }
+    ).exec();
+
+    res.json({
+      message: "Conversation closed successfully",
+      data: user.openConversation,
     });
   } catch (err) {
     console.error(err);
