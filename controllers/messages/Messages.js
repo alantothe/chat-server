@@ -1,6 +1,7 @@
 import Messages from "../../models/Messages.js";
 import Conversation from "../../models/Conversation.js";
 import User from "../../models/User.js";
+import Notification from "../../models/Notification.js";
 
 export const createMessage = async (req, res) => {
   const { recipientIds, senderId, message, img } = req.body;
@@ -39,6 +40,15 @@ export const createMessage = async (req, res) => {
 
       await newMessage.save();
 
+      const notification = new Notification({
+        recipientId: recipientIds,
+        type: "message",
+        content: message,
+        conversationId: conversation._id,
+      });
+
+      await notification.save();
+
       // push conversation id to user's activeConversations or activeGroupConversations
       members.length <= 2
         ? await conversation.members.forEach(async (member) => {
@@ -73,6 +83,14 @@ export const createMessage = async (req, res) => {
 
       await newMessage.save();
     }
+    const notification = new Notification({
+      recipientId: recipientIds,
+      type: "message",
+      content: message,
+      conversationId: conversation._id,
+    });
+
+    await notification.save();
 
     res.status(201).json({
       message: "Message was sent successfully!",
