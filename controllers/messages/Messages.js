@@ -40,14 +40,18 @@ export const createMessage = async (req, res) => {
 
       await newMessage.save();
 
-      const notification = new Notification({
-        recipientId: recipientIds,
-        type: "message",
-        content: message,
-        conversationId: conversation._id,
-      });
+      //send a notification for each recipient
 
-      await notification.save();
+      for (let i = 0; i < recipientIds.length; i++) {
+        const notification = new Notification({
+          recipientId: recipientIds[i],
+          type: "message",
+          content: message,
+          conversationId: conversation._id,
+        });
+
+        await notification.save();
+      }
 
       // push conversation id to user's activeConversations or activeGroupConversations
       members.length <= 2
@@ -83,14 +87,18 @@ export const createMessage = async (req, res) => {
 
       await newMessage.save();
     }
-    const notification = new Notification({
-      recipientId: recipientIds,
-      type: "message",
-      content: message,
-      conversationId: conversation._id,
-    });
+    //send a notification for each recipient
 
-    await notification.save();
+    for (let i = 0; i < recipientIds.length; i++) {
+      const notification = new Notification({
+        recipientId: recipientIds[i],
+        type: "message",
+        content: message,
+        conversationId: conversation._id,
+      });
+
+      await notification.save();
+    }
 
     res.status(201).json({
       message: "Message was sent successfully!",

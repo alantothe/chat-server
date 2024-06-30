@@ -1,5 +1,6 @@
 import FriendRequest from "../../models/FriendRequest.js";
 import User from "../../models/User.js";
+import Notification from "../../models/Notification.js";
 
 export const sendFriendRequest = async (req, res) => {
   const { requisitionerId, recipientId } = req.body;
@@ -27,6 +28,17 @@ export const sendFriendRequest = async (req, res) => {
       recipientId,
       status: "pending",
     });
+
+    // Create a notification
+    const notification = new Notification({
+      recipientId: recipientId,
+      type: "friendRequest",
+      content: "You have a new friend request",
+      friendRequestId: request._id,
+    });
+
+    await notification.save();
+
     res.status(201).json({ message: "Friend request sent", request });
   } catch (err) {
     console.log(err);
