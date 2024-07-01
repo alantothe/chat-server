@@ -79,16 +79,9 @@ export const openConversation = async (req, res) => {
       return res.status(404).json({ message: "Conversation not found" });
     }
 
-    const notification = await Notification.findOneAndUpdate(
-      { recipientId: _id, conversationId },
-      { $set: { read: true } },
-      { new: true }
-    ).exec();
-
     res.json({
       message: "Conversation opened successfully",
       data: user.openConversation,
-      notification: notification.read,
     });
   } catch (err) {
     console.error(err);

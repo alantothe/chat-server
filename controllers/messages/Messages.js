@@ -80,18 +80,18 @@ export const createMessage = async (req, res) => {
 
     await newMessage.save();
 
-    // send a notification for each recipient
-    await Promise.all(
-      recipientIds.map(async (recipientId) => {
-        const notification = new Notification({
-          recipientId,
-          type: "message",
-          content: message,
-          conversationId: conversation._id,
-        });
-        await notification.save();
-      })
-    );
+    // // send a notification for each recipient
+    // await Promise.all(
+    //   recipientIds.map(async (recipientId) => {
+    //     const notification = new Notification({
+    //       recipientId,
+    //       type: "message",
+    //       content: message,
+    //       conversationId: conversation._id,
+    //     });
+    //     await notification.save();
+    //   })
+    // );
 
     res.status(201).json({
       message: "Message was sent successfully!",
