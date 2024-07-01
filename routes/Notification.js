@@ -1,10 +1,8 @@
 import { Router } from "express";
-
-const getAll = (req, res) => {
-  res.send("Get all");
-};
+import * as notificationController from "../controllers/Notifications/Notifications.js";
 
 const router = Router();
-router.get("/", getAll);
+
+router.get("/getNotifications/:_id", notificationController.getNotifications);
 
 export default router;

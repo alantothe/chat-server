@@ -68,19 +68,5 @@
     "activeConversations": [],
     "activeGroupConversations": [],
     "openConversation": null
-  },
-  {
-    "firstName": "Big",
-    "lastName": "Cock",
-    "avatar": "https://res.cloudinary.com/dzjr3skhe/image/upload/v1693853459/tgdkvzjwl06f1tvu9ams.png",
-    "email": "cock@gmail.com",
-    "password": "fresh123",
-    "status": "Looking forward to the weekend!",
-    "bio": "Avid reader and writer.",
-    "backgroundImage": "https://example.com/bg6.jpg",
-    "friends": [],
-    "activeConversations": [],
-    "activeGroupConversations": [],
-    "openConversation": null
   }
 ]

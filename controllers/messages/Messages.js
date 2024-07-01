@@ -30,79 +30,71 @@ export const createMessage = async (req, res) => {
 
       await conversation.save();
 
-      // create the new message and link it to the conversation
-      const newMessage = new Messages({
-        conversationId: conversation._id,
-        senderId,
-        message,
-        img,
-      });
-
-      await newMessage.save();
-
-      //send a notification for each recipient
-
-      for (let i = 0; i < recipientIds.length; i++) {
-        const notification = new Notification({
-          recipientId: recipientIds[i],
-          type: "message",
-          content: message,
-          conversationId: conversation._id,
-        });
-
-        await notification.save();
-      }
-
       // push conversation id to user's activeConversations or activeGroupConversations
-      members.length <= 2
-        ? await conversation.members.forEach(async (member) => {
+      if (members.length <= 2) {
+        await Promise.all(
+          members.map(async (member) => {
             await User.findByIdAndUpdate(
-              member._id,
+              member,
               { $push: { activeConversations: conversation._id } },
               { new: true }
-            ).exec();
+            );
           })
-        : await conversation.members.forEach(async (member) => {
+        );
+      } else {
+        await Promise.all(
+          members.map(async (member) => {
             await User.findByIdAndUpdate(
-              member._id,
+              member,
               { $push: { activeGroupConversations: conversation._id } },
               { new: true }
-            ).exec();
-          });
+            );
+          })
+        );
+      }
     } else {
       // update the last message for the existing conversation
       conversation.set({
         lastMessage: message,
         lastSeenBy: senderId,
         lastMessageFrom: senderId,
+        unreadCount: new Map(
+          members.map((member) => [
+            member,
+            member.toString() === senderId.toString()
+              ? 0
+              : (conversation.unreadCount.get(member) || 0) + 1,
+          ])
+        ),
       });
       await conversation.save();
-      // create the new message and link it to the conversation
-      const newMessage = new Messages({
-        conversationId: conversation._id,
-        senderId,
-        message,
-        img,
-      });
-
-      await newMessage.save();
     }
-    //send a notification for each recipient
 
-    for (let i = 0; i < recipientIds.length; i++) {
-      const notification = new Notification({
-        recipientId: recipientIds[i],
-        type: "message",
-        content: message,
-        conversationId: conversation._id,
-      });
+    // create the new message and link it to the conversation
+    const newMessage = new Messages({
+      conversationId: conversation._id,
+      senderId,
+      message,
+      img,
+    });
 
-      await notification.save();
-    }
+    await newMessage.save();
+
+    // send a notification for each recipient
+    await Promise.all(
+      recipientIds.map(async (recipientId) => {
+        const notification = new Notification({
+          recipientId,
+          type: "message",
+          content: message,
+          conversationId: conversation._id,
+        });
+        await notification.save();
+      })
+    );
 
     res.status(201).json({
       message: "Message was sent successfully!",
-
       members: conversation.detailedMembers,
     });
   } catch (err) {

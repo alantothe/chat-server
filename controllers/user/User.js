@@ -71,7 +71,7 @@ export const openConversation = async (req, res) => {
     // Update the user's openConversation field
     const user = await User.findByIdAndUpdate(
       _id,
-      { $set: { openConversation: _id } },
+      { $set: { openConversation: conversationId } },
       { new: true }
     ).exec();
 
