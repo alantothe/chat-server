@@ -13,20 +13,22 @@ export const entireUser = async (req, res) => {
 };
 
 export const limitedUser = async (req, res) => {
-  const { _id } = req.params;
+  const { ids } = req.body;
 
   try {
-    const user = await User.findOne(
-      { _id },
-      "firstName lastName avatar bio email backgroundImage "
-    ).exec();
-    console.log("Selected Fields User:", user);
+    const users = await User.find({
+      _id: { $in: ids },
+    })
+      .select("firstName lastName avatar bio email backgroundImage")
+      .exec();
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    console.log("Selected Fields Users:", users);
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "Users not found" });
     }
 
-    res.json(user);
+    res.json(users);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
