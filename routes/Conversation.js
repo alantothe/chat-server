@@ -1,10 +1,8 @@
 import { Router } from "express";
-
-const getAll = (req, res) => {
-  res.send("Get all");
-};
-
+import * as controllers from "../controllers/conversation/Conversation.js";
 const router = Router();
-router.get("/", getAll);
+
+router.get("/all/:_id", controllers.getAll);
+//
 
 export default router;

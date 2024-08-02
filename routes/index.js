@@ -2,7 +2,7 @@ import { Router } from "express";
 import messageRouter from "./Messages.js";
 import notificationRouter from "./Notification.js";
 import friendRequestRouter from "./FriendRequest.js";
-// import Conversation from "./Conversation";
+import conversationRouter from "./Conversation.js";
 import usersRouter from "./User.js";
 import emailsRouter from "./Emails.js";
 
@@ -17,5 +17,6 @@ router.use("/email", emailsRouter);
 router.use("/friendrequest", friendRequestRouter);
 router.use("/message", messageRouter);
 router.use("/notification", notificationRouter);
+router.use("/conversation", conversationRouter);
 
 export default router;
