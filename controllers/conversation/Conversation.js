@@ -5,6 +5,11 @@ export const getAll = async (req, res) => {
   try {
     const conversations = await Conversation.find({
       members: _id,
+      $expr: { $eq: [{ $size: "$members" }, 2] }, // only has 2 members
+    }).populate({
+      path: "detailedLastMessageFrom",
+      model: "User",
+      select: "firstName lastName avatar",
     });
     console.log("Conversations:", conversations);
     if (!conversations || conversations.length === 0) {

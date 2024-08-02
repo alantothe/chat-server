@@ -18,8 +18,18 @@ const ConversationSchema = new mongoose.Schema(
       of: Number,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+ConversationSchema.virtual("detailedLastMessageFrom", {
+  ref: "User",
+  localField: "lastMessageFrom",
+  foreignField: "_id",
+});
 
 const Conversation = mongoose.model("Conversation", ConversationSchema);
 
