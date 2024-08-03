@@ -29,6 +29,7 @@ ConversationSchema.virtual("detailedLastMessageFrom", {
   ref: "User",
   localField: "lastMessageFrom",
   foreignField: "_id",
+  justOne: true,
 });
 
 const Conversation = mongoose.model("Conversation", ConversationSchema);

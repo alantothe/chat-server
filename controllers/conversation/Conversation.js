@@ -12,6 +12,7 @@ export const getAll = async (req, res) => {
       select: "firstName lastName avatar",
     });
     console.log("Conversations:", conversations);
+
     if (!conversations || conversations.length === 0) {
       return res.status(404).json({ error: "Conversation not found" });
     }
