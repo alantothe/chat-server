@@ -46,18 +46,18 @@ export const getAllGroup = async (req, res) => {
   }
 }
 
-export const openConversation = async (req, res) => {
+// export const openConversation = async (req, res) => {
 
-  const { _id } = req.params;
-  try {
-    const conversation = await Conversation.findById(_id)
-    res.json(conversation);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
-}
-if (!conversation) {
-  return res.status(404).json({ error: "Conversation not found" });
-}
+//   const { _id } = req.params;
+//   try {
+//     const conversation = await Conversation.findById(_id)
+//     res.json(conversation);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Internal server error" });
+// }
+// if (!conversation) {
+//   return res.status(404).json({ error: "Conversation not found" });
+// }
 
-}
+// }
