@@ -127,7 +127,10 @@ export const getMessages = async (req, res) => {
       conversationId: conversationId
       
 
-     })
+     }).populate({
+      path: 'senderId',
+      select: 'firstName lastName avatar' 
+  })
 
     
     if (!messages || messages.length === 0) {
