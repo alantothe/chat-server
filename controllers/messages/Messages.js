@@ -102,7 +102,6 @@ export const createMessage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 export const getMessages = async (req, res) => {
   const { _id, userId } = req.params;
 
