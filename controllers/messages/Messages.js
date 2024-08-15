@@ -1,7 +1,7 @@
 import Messages from "../../models/Messages.js";
 import Conversation from "../../models/Conversation.js";
 import User from "../../models/User.js";
-import Notification from "../../models/Notification.js";
+import mongoose from "mongoose";
 
 export const createMessage = async (req, res) => {
   const { recipientIds, senderId, message, img } = req.body;
@@ -97,6 +97,34 @@ export const createMessage = async (req, res) => {
       message: "Message was sent successfully!",
       members: conversation.detailedMembers,
     });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getMessages = async (req, res) => {
+  const { _id } = req.params;
+
+  try {
+    const conversationId = new mongoose.Types.ObjectId(_id);
+
+    const messages = await Messages.find({ 
+      conversationId: conversationId
+      
+
+     })
+
+
+
+
+    if (!messages || messages.length === 0) {
+      return res.status(404).json({ error: "Messages not found" });
+    }
+    
+
+    res.json(messages);
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
