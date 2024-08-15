@@ -104,10 +104,25 @@ export const createMessage = async (req, res) => {
 };
 
 export const getMessages = async (req, res) => {
-  const { _id } = req.params;
+  const { _id, userId } = req.params;
 
   try {
     const conversationId = new mongoose.Types.ObjectId(_id);
+    const conversation = await Conversation.findById(conversationId)
+        .populate({
+            path: 'members',
+            select: 'firstName lastName avatar' 
+        })
+        .exec();
+    for (let i=0; i<conversation.members.length;i++){
+      if (conversation.members[i]._id.toString() === userId.toString()){
+        conversation.members.splice(i, 1);
+      }
+    }
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+
 
     const messages = await Messages.find({ 
       conversationId: conversationId
@@ -115,15 +130,17 @@ export const getMessages = async (req, res) => {
 
      })
 
-
-
-
+    
     if (!messages || messages.length === 0) {
       return res.status(404).json({ error: "Messages not found" });
     }
     
 
-    res.json(messages);
+    res.json({
+      members: conversation.members,
+      messages: messages
+    });
+
 
   } catch (err) {
     console.log(err);
