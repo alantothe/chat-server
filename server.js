@@ -7,8 +7,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import logger from "morgan";
 import routes from "./routes/index.js";
-// import socketServer from "./socketServer.js";
-// import ioMiddleware from "./middleware/ioMIddleware.js";
+import socketServer from "./socketServer.js";
+import ioMiddleware from "./middleware/ioMiddleware.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -32,14 +32,13 @@ app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(logger("dev"));
 
-// // Initialize Socket.IO server
-// const io = new socketServer(server, {
-//   cors: corsOptions,
-// });
+// Initialize Socket.IO server
+const io = new socketServer(server, {
+  cors: corsOptions,
+});
 
 // Use socket in all routes
-// app.use(ioMiddleware(io));
-
+app.use(ioMiddleware(io));
 app.use("/api", routes);
 
 db.on("connected", () => {
